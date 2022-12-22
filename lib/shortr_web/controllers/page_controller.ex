@@ -2,6 +2,7 @@ defmodule ShortrWeb.PageController do
   use ShortrWeb, :controller
   alias Shortr.Links
   alias Shortr.Links.Link
+  alias Shortr.Repo
 
   def index(conn, _params) do
     changeset = Links.change_link(%Link{})
@@ -36,6 +37,24 @@ defmodule ShortrWeb.PageController do
   end
 
   def export(conn, _params) do
+    conn =
+      conn
+      |> put_resp_content_type("text/csv")
+      |> put_resp_header("content-disposition", ~s(attachment; filename="export.csv"))
+      |> send_chunked(:ok)
+
+    {:ok, conn} =
+      Repo.transaction(fn ->
+        Links.export_links()
+        |> Enum.reduce_while(conn, fn data, conn ->
+          case chunk(conn, data) do
+            {:ok, conn} -> {:cont, conn}
+            {:error, :closed} -> {:halt, conn}
+          end
+        end)
+      end)
+
+      conn
   end
 
   defp do_redirect(%Link{url: url}, conn), do: redirect(conn, external: url)

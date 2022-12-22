@@ -39,7 +39,7 @@ defmodule ShortrWeb.PageControllerTest do
 
       assert link.hits == 0
 
-      conn = get(conn, link_url(link))
+      get(conn, link_url(link))
 
       %{hits: hits} = Shortr.Links.get_link!(link.id)
 
@@ -49,6 +49,18 @@ defmodule ShortrWeb.PageControllerTest do
     test "visiting invalid link renders 404", %{conn: conn} do
       conn = get(conn, "/asdf")
       assert html_response(conn, 404) =~ "Link not found!"
+    end
+  end
+
+  describe "stats" do
+    test "renders stats page", %{conn: conn} do
+      conn = get(conn, Routes.page_path(conn, :stats))
+      assert html_response(conn, :ok) =~ "table-dark"
+    end
+
+    test "allows exporting", %{conn: conn} do
+      conn = get(conn, Routes.page_path(conn, :export))
+      assert response_content_type(conn, :csv)
     end
   end
 

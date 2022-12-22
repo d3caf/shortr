@@ -1,0 +1,7 @@
+<div>
+  <h2 class="text-center text-secondary">Your shortened link is <a href={link_url(@link)} rel="noopener" style="color: darkturquoise;"><%= link_url(@link) %></a></h2>
+</div>
+
+<div class="text-center mt-4">
+  <a class="btn btn-dark btn-lg" href={Routes.page_path(@conn, :index)}>&#8592; Start Over</a>
+</div>

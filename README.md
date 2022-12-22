@@ -1,19 +1,22 @@
 # Shortr
+Shorten URLs with gusto.
 
-To start your Phoenix server:
+We basically have a simple form for the URL which, when submitted, checks that the URL is valid and if so, generates a unique slug using `:crypto.strong_rand_bytes` and stores this in our DB. Going to `<app_url>/<slug>` checks the DB to see if such a slug exists (we index by the slug in Postgres), and if so, increments the `hits` counter by one and redirects the user to the original URL.
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+Navigating to `/stats` allows us to see all of the shortened links and their corresponding hits. We're also able to export a CSV of this data from this page. The export is streamed into a chunked response to keep things speedy even as our dataset gets larger.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## 🧑‍💻 Development
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+### Requirements
+- Postgres
+- Elixir
 
-## Learn more
+### Setup
+- If using ASDF, run `asdf install` to grab the correct versions of Elixir and Erlang.
+- Install dependencies (`mix deps.get`)
+- Create/migrate DB (`mix ecto.setup`)
+- Start server (`iex -S mix phx.server`)
+- Visit `localhost:4000`
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+### Testing
+Run `mix test` and watch everything turn green :)

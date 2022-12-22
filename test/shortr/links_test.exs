@@ -21,12 +21,12 @@ defmodule Shortr.LinksTest do
     end
 
     test "create_link/1 with valid data creates a link" do
-      valid_attrs = %{hits: 42, slug: "some slug", url: "some url"}
+      valid_attrs = %{url: "https://google.com"}
 
       assert {:ok, %Link{} = link} = Links.create_link(valid_attrs)
-      assert link.hits == 42
-      assert link.slug == "some slug"
-      assert link.url == "some url"
+      assert link.hits == 0
+      assert not is_nil(link.slug)
+      assert link.url == "https://google.com"
     end
 
     test "create_link/1 with invalid data returns error changeset" do
@@ -35,12 +35,12 @@ defmodule Shortr.LinksTest do
 
     test "update_link/2 with valid data updates the link" do
       link = link_fixture()
-      update_attrs = %{hits: 43, slug: "some updated slug", url: "some updated url"}
+      update_attrs = %{hits: 43, slug: "slug", url: "https://test.com"}
 
       assert {:ok, %Link{} = link} = Links.update_link(link, update_attrs)
       assert link.hits == 43
-      assert link.slug == "some updated slug"
-      assert link.url == "some updated url"
+      assert link.slug == "slug"
+      assert link.url == "https://test.com"
     end
 
     test "update_link/2 with invalid data returns error changeset" do

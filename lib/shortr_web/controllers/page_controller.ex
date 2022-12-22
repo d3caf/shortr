@@ -14,14 +14,19 @@ defmodule ShortrWeb.PageController do
         render(conn, "success.html", link: link)
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "index.html", changeset: changeset)
     end
   end
 
   def show(conn, %{"slug" => slug}) do
-    Links.get_link_by_slug!(slug)
-    |> Links.add_hit()
-    |> do_redirect(conn)
+    case Links.get_link_by_slug(slug) do
+      nil ->
+        conn |> put_status(:not_found) |> render("404.html")
+
+      link ->
+        Links.add_hit(link)
+        |> do_redirect(conn)
+    end
   end
 
   def stats(conn, _params) do
@@ -31,7 +36,6 @@ defmodule ShortrWeb.PageController do
   end
 
   def export(conn, _params) do
-
   end
 
   defp do_redirect(%Link{url: url}, conn), do: redirect(conn, external: url)

@@ -5,7 +5,7 @@ defmodule Shortr.Links.Link do
   @url_regex ~r/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/
 
   schema "links" do
-    field :hits, :integer
+    field :hits, :integer, default: 0
     field :slug, :string
     field :url, :string
   end
@@ -19,7 +19,7 @@ defmodule Shortr.Links.Link do
     |> validate_required([:url, :slug])
   end
 
-  defp validate_url(changeset), do: validate_format(changeset, :url, @url_regex)
+  defp validate_url(changeset), do: validate_format(changeset, :url, @url_regex, message: "Invalid URL!")
 
   defp set_slug_if_nil(changeset) do
     slug = get_field(changeset, :slug)

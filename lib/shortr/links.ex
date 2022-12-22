@@ -38,7 +38,7 @@ defmodule Shortr.Links do
   """
   def get_link!(id), do: Repo.get!(Link, id)
 
-  def get_link_by_slug!(slug), do: Repo.get_by!(Link, slug: slug)
+  def get_link_by_slug(slug), do: Repo.get_by(Link, slug: slug)
 
   def add_hit(%Link{hits: hits} = link) do
     {:ok, link} =

@@ -12,8 +12,8 @@ defmodule Shortr.LinksFixtures do
       attrs
       |> Enum.into(%{
         hits: 42,
-        slug: "some slug",
-        url: "some url"
+        slug: "slug",
+        url: "https://example.com"
       })
       |> Shortr.Links.create_link()
 
